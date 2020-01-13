@@ -3,7 +3,7 @@ import os
 import random
 import re
 import subprocess
-import tempfile
+import wave
 import zipfile
 from collections import namedtuple
 from typing import List
@@ -13,20 +13,15 @@ EncodeResult = namedtuple('EncodeResult', ('filename', 'opus_data'))
 OPUSTAGS_PATH = os.environ.get('OPUSTAGS_PATH')
 
 
-def select_samples(size_thresh_p, n_samples) -> List[os.DirEntry]:
-    min_thresh = 0.5 - size_thresh_p / 2
-    max_thresh = 0.5 + size_thresh_p / 2
+def get_wave_length_sec(filename: str) -> float:
+    with wave.open(filename) as wf:
+        return wf.getnframes() / wf.getparams().framerate
 
-    samples = [dent for dent in os.scandir('samples') if dent.name.endswith('.wav')]
-    total_size = sum(dent.stat().st_size for dent in samples)
-    average_size = total_size / len(samples)
-    min_size = average_size * min_thresh
-    max_size = average_size * max_thresh
 
-    acceptable_samples = [dent for dent in samples if min_size <= dent.stat().st_size <= max_size]
-
+def select_samples(*, n_samples: int, min_length: float, max_length: float) -> List[os.DirEntry]:
+    samples = [dent for dent in os.scandir('pcm_samples') if dent.name.endswith('.wav')]
+    acceptable_samples = [dent for dent in samples if min_length <= get_wave_length_sec(dent.path) <= max_length]
     print(f'{len(acceptable_samples)} acceptable samples, choosing {n_samples}')
-
     return random.sample(acceptable_samples, n_samples)
 
 
@@ -61,7 +56,7 @@ def encode_opus(input_filename: str):
 
 
 def main():
-    samples = select_samples(size_thresh_p=0.3, n_samples=250)
+    samples = select_samples(n_samples=400, min_length=0.1, max_length=1.75)
     with zipfile.ZipFile('public/samples.zip', 'w') as zf:
         with multiprocessing.Pool() as p:
             sample_paths = [dent.path for dent in samples]
