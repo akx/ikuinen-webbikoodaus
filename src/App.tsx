@@ -1,33 +1,19 @@
 import React from "react";
 import "./App.css";
-import logo from "./logo.png";
-import { loadSampleZip, Sample } from "./samples";
-import sample from "lodash/sample";
+import { loadSampleFile, loadSampleZip, Sample } from "./samples";
+import Player from "./Player";
+import { LabeledInput } from "./LabeledInput";
 
 const ctx = new AudioContext();
-const sampleNameHistory: string[] = [];
-
-function pickNextSample(samples: Sample[]): Sample | undefined {
-  let nextSample: Sample | undefined;
-  for (let i = 0; i < 10; i++) {
-    nextSample = sample(samples); // heh
-    if (!nextSample || !sampleNameHistory.includes(nextSample.name)) {
-      break;
-    }
-  }
-  if (!nextSample) {
-    return undefined;
-  }
-  sampleNameHistory.push(nextSample.name);
-  if (sampleNameHistory.length >= 25) {
-    sampleNameHistory.shift();
-  }
-  return nextSample;
-}
 
 const App: React.FC = () => {
   const [samples, setSamples] = React.useState<Sample[] | undefined>();
-  const [isPlaying, setIsPlaying] = React.useState<boolean>(false);
+  const [convolutionResponse, setConvolutionResponse] = React.useState<
+    Sample | undefined
+  >();
+  const [convolutionGain, setConvolutionGain] = React.useState<number>(0);
+  const [finalGain, setFinalGain] = React.useState<number>(1);
+  const [speed, setSpeed] = React.useState<number>(1);
   React.useEffect(() => {
     loadSampleZip(ctx, "./samples.zip").then(
       newSamples => {
@@ -39,41 +25,58 @@ const App: React.FC = () => {
       }
     );
   }, []);
+  React.useEffect(() => {
+    loadSampleFile(ctx, "./bedroom.opus").then(sample => {
+      setConvolutionResponse(sample);
+    });
+  }, []);
   if (samples === undefined) {
     return <div>Loading samples...</div>;
   }
-  const playNextSample = () => {
-    const nextSample = pickNextSample(samples);
-    if (!nextSample) {
-      setIsPlaying(false);
-      return;
-    }
-    const node = ctx.createBufferSource();
-    node.buffer = nextSample.audioBuffer;
-    node.onended = () => {
-      playNextSample();
-    };
-    node.connect(ctx.destination);
-    node.start();
-  };
-  const start = () => {
-    if (!isPlaying) {
-      setIsPlaying(true);
-      playNextSample();
-    }
-  };
+
   return (
     <div className="App">
       <h1>Ikuinen Webbikoodaus</h1>
-      <button onClick={start} disabled={isPlaying}>
-        <img src={logo} alt="Logo" />
-      </button>
+      <Player
+        convolutionSample={convolutionResponse}
+        convolutionGain={convolutionGain}
+        finalGain={finalGain}
+        speed={speed}
+        ctx={ctx}
+        samples={samples}
+      />
       {samples?.length} samples loaded. Hit the button to play.
       <br />
-      <br />
-      Original content from <a href="https://webbidevaus.fi/">
-        Webbidevaus
-      </a>{" "}
+      {convolutionResponse ? (
+        <LabeledInput
+          label="Ambience"
+          type="range"
+          min={0}
+          max={5}
+          step={0.1}
+          value={convolutionGain}
+          onChange={e => setConvolutionGain(e.target.valueAsNumber)}
+        />
+      ) : null}
+      <LabeledInput
+        label="Speed"
+        type="range"
+        min={0.02}
+        max={4}
+        step={0.1}
+        value={speed}
+        onChange={e => setSpeed(e.target.valueAsNumber)}
+      />
+      <LabeledInput
+        label="Volume"
+        type="range"
+        min={0}
+        max={2}
+        step={0.1}
+        value={finalGain}
+        onChange={e => setFinalGain(e.target.valueAsNumber)}
+      />
+      Original content from <a href="https://webbidevaus.fi/">Webbidevaus</a>{" "}
       (CC BY-NC).
       <br />
       Code by @akx (<a href="https://akx.github.io">Github</a>,{" "}

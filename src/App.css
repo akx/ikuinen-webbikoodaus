@@ -16,3 +16,7 @@
 .App button img {
   display: block;
 }
+
+label {
+  display: block;
+}

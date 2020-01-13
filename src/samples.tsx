@@ -32,3 +32,16 @@ export async function loadSampleZip(
   });
   return await Promise.all(zipObjects.map(zo => unpackZipObject(ctx, zo)));
 }
+
+export async function loadSampleFile(
+  ctx: AudioContext,
+  url: string
+): Promise<Sample> {
+  const resp = await fetch(url);
+  const buf: ArrayBuffer = await resp.arrayBuffer();
+  const audioBuffer: AudioBuffer = await ctx.decodeAudioData(buf);
+  return {
+    name: "sample",
+    audioBuffer
+  };
+}
