@@ -10,9 +10,15 @@ const App: React.FC = () => {
   const [samples, setSamples] = React.useState<Sample[] | undefined>();
   const [isPlaying, setIsPlaying] = React.useState<boolean>(false);
   React.useEffect(() => {
-    loadSampleZip(ctx).then(newSamples => {
-      setSamples(newSamples);
-    });
+    loadSampleZip(ctx, "./samples.zip").then(
+      newSamples => {
+        setSamples(newSamples);
+      },
+      err => {
+        alert(`Failed to load samples, sorry!\n${err}`);
+        throw err;
+      }
+    );
   }, []);
   if (samples === undefined) {
     return <div>Loading samples...</div>;

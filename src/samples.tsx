@@ -17,8 +17,11 @@ async function unpackZipObject(
   };
 }
 
-export async function loadSampleZip(ctx: AudioContext): Promise<Sample[]> {
-  const resp = await fetch("/samples.zip");
+export async function loadSampleZip(
+  ctx: AudioContext,
+  url: string
+): Promise<Sample[]> {
+  const resp = await fetch(url);
   const blob: Blob = await resp.blob();
   const zip: JSZip = await JSZip.loadAsync(blob);
   const zipObjects: JSZipObject[] = [];

@@ -1,7 +1,8 @@
 {
-  "name": "ikuinen",
+  "name": "ikuinen-webbikoodaus",
   "version": "0.1.0",
   "private": true,
+  "homepage" : "https://akx.github.io/ikuinen-webbikoodaus",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -21,7 +22,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "yarn build && ghpg -d build -j && git push -u origin gh-pages:gh-pages"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -41,6 +43,7 @@
   "devDependencies": {
     "@types/jszip": "^3.1.7",
     "@types/lodash": "^4.14.149",
+    "ghpg": "^1.0.1",
     "prettier": "^1.19.1"
   }
 }

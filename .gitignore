@@ -1,3 +1,4 @@
-node_modules
+build
 fltp_samples
+node_modules
 pcm_samples
