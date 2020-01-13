@@ -8,7 +8,7 @@ interface PlayerProps {
   ctx: AudioContext;
   convolutionSample: Sample | undefined;
   convolutionGain: number;
-  finalGain: number;
+  dryGain: number;
   speed: number;
 }
 
@@ -17,7 +17,7 @@ class PlayerCore {
   private readonly samples: Sample[];
   private readonly convolverGainNode: GainNode;
   private readonly convolverNode: ConvolverNode;
-  private readonly finalGainNode: GainNode;
+  private readonly dryGainNode: GainNode;
   private readonly sampleNameHistory: string[] = [];
   private speed: number = 1;
   private isPlaying: boolean = false;
@@ -26,10 +26,10 @@ class PlayerCore {
   constructor(ctx: AudioContext, samples: Sample[]) {
     this.ctx = ctx;
     this.samples = samples;
-    this.finalGainNode = ctx.createGain();
-    this.finalGainNode.connect(ctx.destination);
+    this.dryGainNode = ctx.createGain();
+    this.dryGainNode.connect(ctx.destination);
     this.convolverNode = ctx.createConvolver();
-    this.convolverNode.connect(this.finalGainNode);
+    this.convolverNode.connect(ctx.destination);
     this.convolverGainNode = ctx.createGain();
     this.convolverGainNode.connect(this.convolverNode);
   }
@@ -51,11 +51,11 @@ class PlayerCore {
   public setParameters(
     newSpeed: number,
     newConvolverGain: number,
-    newFinalGain: number
+    newDryGain: number
   ): void {
     this.speed = newSpeed;
     this.convolverGainNode.gain.value = newConvolverGain;
-    this.finalGainNode.gain.value = newFinalGain;
+    this.dryGainNode.gain.value = newDryGain;
   }
 
   private pickNextSample(): Sample | undefined {
@@ -91,7 +91,7 @@ class PlayerCore {
     node.onended = () => {
       this.playNextSample();
     };
-    node.connect(this.finalGainNode);
+    node.connect(this.dryGainNode);
     if (this.convolverGainNode.gain.value > 0) {
       node.connect(this.convolverGainNode);
     }
@@ -110,7 +110,7 @@ const Player: React.FC<PlayerProps> = props => {
     ctx,
     convolutionSample,
     convolutionGain,
-    finalGain,
+    dryGain,
     speed
   } = props;
   const [angle, setAngle] = React.useState(0);
@@ -129,9 +129,9 @@ const Player: React.FC<PlayerProps> = props => {
   }, [core, convolutionSample]);
   React.useEffect(() => {
     if (core) {
-      core.setParameters(speed, convolutionGain, finalGain);
+      core.setParameters(speed, convolutionGain, dryGain);
     }
-  }, [core, speed, convolutionGain, finalGain]);
+  }, [core, speed, convolutionGain, dryGain]);
   React.useEffect(() => {
     if (core) {
       core.newSampleCallback = () => setAngle(-15 + Math.random() * 30);

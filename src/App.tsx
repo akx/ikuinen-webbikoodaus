@@ -12,7 +12,7 @@ const App: React.FC = () => {
     Sample | undefined
   >();
   const [convolutionGain, setConvolutionGain] = React.useState<number>(0);
-  const [finalGain, setFinalGain] = React.useState<number>(1);
+  const [dryGain, setDryGain] = React.useState<number>(1);
   const [speed, setSpeed] = React.useState<number>(1);
   React.useEffect(() => {
     loadSampleZip(ctx, "./samples.zip").then(
@@ -40,7 +40,7 @@ const App: React.FC = () => {
       <Player
         convolutionSample={convolutionResponse}
         convolutionGain={convolutionGain}
-        finalGain={finalGain}
+        dryGain={dryGain}
         speed={speed}
         ctx={ctx}
         samples={samples}
@@ -73,8 +73,8 @@ const App: React.FC = () => {
         min={0}
         max={2}
         step={0.1}
-        value={finalGain}
-        onChange={e => setFinalGain(e.target.valueAsNumber)}
+        value={dryGain}
+        onChange={e => setDryGain(e.target.valueAsNumber)}
       />
       Original content from <a href="https://webbidevaus.fi/">Webbidevaus</a>{" "}
       (CC BY-NC).
