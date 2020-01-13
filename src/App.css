@@ -1,0 +1,18 @@
+.App {
+  margin: auto;
+  max-width: 700px;
+  padding: 2rem;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.App button {
+  padding: 2em;
+  font-size: inherit;
+  display: block;
+  margin: 1em auto;
+}
+
+.App button img {
+  display: block;
+}
