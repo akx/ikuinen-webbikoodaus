@@ -3,26 +3,6 @@ import sample from "lodash/sample";
 import logo from "./logo.png";
 import React from "react";
 
-const sampleNameHistory: string[] = [];
-
-function pickNextSample(samples: Sample[]): Sample | undefined {
-  let nextSample: Sample | undefined;
-  for (let i = 0; i < 10; i++) {
-    nextSample = sample(samples); // heh
-    if (!nextSample || !sampleNameHistory.includes(nextSample.name)) {
-      break;
-    }
-  }
-  if (!nextSample) {
-    return undefined;
-  }
-  sampleNameHistory.push(nextSample.name);
-  if (sampleNameHistory.length >= 25) {
-    sampleNameHistory.shift();
-  }
-  return nextSample;
-}
-
 interface PlayerProps {
   samples: Sample[];
   ctx: AudioContext;
@@ -38,6 +18,7 @@ class PlayerCore {
   private readonly convolverGainNode: GainNode;
   private readonly convolverNode: ConvolverNode;
   private readonly finalGainNode: GainNode;
+  private readonly sampleNameHistory: string[] = [];
   private speed: number = 1;
   private isPlaying: boolean = false;
   public newSampleCallback: (() => void) | undefined = undefined;
@@ -77,11 +58,28 @@ class PlayerCore {
     this.finalGainNode.gain.value = newFinalGain;
   }
 
+  private pickNextSample(): Sample | undefined {
+    let nextSample: Sample | undefined;
+    for (let i = 0; i < 10; i++) {
+      nextSample = sample(this.samples); // heh
+      if (!nextSample || !this.sampleNameHistory.includes(nextSample.name)) {
+        break;
+      }
+    }
+    if (nextSample) {
+      this.sampleNameHistory.push(nextSample.name);
+      if (this.sampleNameHistory.length >= 25) {
+        this.sampleNameHistory.shift();
+      }
+    }
+    return nextSample;
+  }
+
   private playNextSample = () => {
     if (!this.isPlaying) {
       return;
     }
-    const nextSample = pickNextSample(this.samples);
+    const nextSample = this.pickNextSample();
     if (!nextSample) {
       this.stop();
       return;
