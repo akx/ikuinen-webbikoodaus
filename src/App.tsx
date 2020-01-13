@@ -5,6 +5,25 @@ import { loadSampleZip, Sample } from "./samples";
 import sample from "lodash/sample";
 
 const ctx = new AudioContext();
+const sampleNameHistory: string[] = [];
+
+function pickNextSample(samples: Sample[]): Sample | undefined {
+  let nextSample: Sample | undefined;
+  for (let i = 0; i < 10; i++) {
+    nextSample = sample(samples); // heh
+    if (!nextSample || !sampleNameHistory.includes(nextSample.name)) {
+      break;
+    }
+  }
+  if (!nextSample) {
+    return undefined;
+  }
+  sampleNameHistory.push(nextSample.name);
+  if (sampleNameHistory.length >= 25) {
+    sampleNameHistory.shift();
+  }
+  return nextSample;
+}
 
 const App: React.FC = () => {
   const [samples, setSamples] = React.useState<Sample[] | undefined>();
@@ -24,7 +43,7 @@ const App: React.FC = () => {
     return <div>Loading samples...</div>;
   }
   const playNextSample = () => {
-    const nextSample = sample(samples); // heh
+    const nextSample = pickNextSample(samples);
     if (!nextSample) {
       setIsPlaying(false);
       return;
