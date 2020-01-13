@@ -4,8 +4,9 @@ export const LabeledInput: React.FC<React.InputHTMLAttributes<
   HTMLInputElement
 > & {
   label: React.ReactNode;
-}> = ({ label, ...props }) => (
+  suffix?: React.ReactNode;
+}> = ({ label, suffix, ...props }) => (
   <label>
-    {label}: <input {...props} />
+    {label}: <input {...props} /> {suffix}
   </label>
 );

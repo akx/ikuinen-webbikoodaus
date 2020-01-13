@@ -6,8 +6,21 @@ import { LabeledInput } from "./LabeledInput";
 
 const ctx = new AudioContext();
 
+const convolutionMap = [
+  ["bathroom", "Bathroom"],
+  ["bedroom", "Bedroom"],
+  ["cathedral", "Cathedral"],
+  ["tunnel", "Tunnel"],
+  ["forest", "Forest"],
+  ["glitterspace", "Glitter Space"],
+  ["kaukana", "Kaukana"]
+];
+
 const App: React.FC = () => {
   const [samples, setSamples] = React.useState<Sample[] | undefined>();
+  const [convolutionChoice, setConvolutionChoice] = React.useState<string>(
+    "bedroom"
+  );
   const [convolutionResponse, setConvolutionResponse] = React.useState<
     Sample | undefined
   >();
@@ -26,10 +39,12 @@ const App: React.FC = () => {
     );
   }, []);
   React.useEffect(() => {
-    loadSampleFile(ctx, "./bedroom.opus").then(sample => {
-      setConvolutionResponse(sample);
-    });
-  }, []);
+    loadSampleFile(ctx, `./convolution/${convolutionChoice}.opus`).then(
+      sample => {
+        setConvolutionResponse(sample);
+      }
+    );
+  }, [convolutionChoice]);
   if (samples === undefined) {
     return <div>Loading samples...</div>;
   }
@@ -50,6 +65,18 @@ const App: React.FC = () => {
       {convolutionResponse ? (
         <LabeledInput
           label="Ambience"
+          suffix={
+            <select
+              value={convolutionChoice}
+              onChange={e => setConvolutionChoice(e.target.value)}
+            >
+              {convolutionMap.map(([value, title]) => (
+                <option key={value} value={value}>
+                  {title}
+                </option>
+              ))}
+            </select>
+          }
           type="range"
           min={0}
           max={5}
