@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/ikuinen-webbikoodaus/static/css/main.e736972b.chunk.css",
-    "main.js": "/ikuinen-webbikoodaus/static/js/main.057d41a5.chunk.js",
-    "main.js.map": "/ikuinen-webbikoodaus/static/js/main.057d41a5.chunk.js.map",
+    "main.js": "/ikuinen-webbikoodaus/static/js/main.5ae079e1.chunk.js",
+    "main.js.map": "/ikuinen-webbikoodaus/static/js/main.5ae079e1.chunk.js.map",
     "runtime-main.js": "/ikuinen-webbikoodaus/static/js/runtime-main.f7c99739.js",
     "runtime-main.js.map": "/ikuinen-webbikoodaus/static/js/runtime-main.f7c99739.js.map",
     "static/js/2.d21a2432.chunk.js": "/ikuinen-webbikoodaus/static/js/2.d21a2432.chunk.js",
     "static/js/2.d21a2432.chunk.js.map": "/ikuinen-webbikoodaus/static/js/2.d21a2432.chunk.js.map",
     "index.html": "/ikuinen-webbikoodaus/index.html",
-    "precache-manifest.88e25de6361dfb62c8da604062f3df12.js": "/ikuinen-webbikoodaus/precache-manifest.88e25de6361dfb62c8da604062f3df12.js",
+    "precache-manifest.07f9fe83b5c9c8ba17880e961b4e1467.js": "/ikuinen-webbikoodaus/precache-manifest.07f9fe83b5c9c8ba17880e961b4e1467.js",
     "service-worker.js": "/ikuinen-webbikoodaus/service-worker.js",
     "static/css/main.e736972b.chunk.css.map": "/ikuinen-webbikoodaus/static/css/main.e736972b.chunk.css.map",
     "static/js/2.d21a2432.chunk.js.LICENSE": "/ikuinen-webbikoodaus/static/js/2.d21a2432.chunk.js.LICENSE"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.f7c99739.js",
     "static/js/2.d21a2432.chunk.js",
     "static/css/main.e736972b.chunk.css",
-    "static/js/main.057d41a5.chunk.js"
+    "static/js/main.5ae079e1.chunk.js"
   ]
 }
