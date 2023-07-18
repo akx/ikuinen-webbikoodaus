@@ -13,7 +13,8 @@ const convolutionMap = [
   ["tunnel", "Tunnel"],
   ["forest", "Forest"],
   ["glitterspace", "Glitter Space"],
-  ["kaukana", "Kaukana"]
+  ["kaukana", "Kaukana"],
+  ["re501", "RE-501"],
 ];
 
 const App: React.FC = () => {
